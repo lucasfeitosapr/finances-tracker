@@ -21,3 +21,21 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+
+.idea/
+
+.mvn/wrapper/
+
+finances-tracker/.mvn/wrapper/
+
+finances-tracker/HELP.md
+
+finances-tracker/mvnw
+
+finances-tracker/mvnw.cmd
+
+HELP.md
+
+mvnw
+
+mvnw.cmd
