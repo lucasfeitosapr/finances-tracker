@@ -1,4 +1,4 @@
-package br.com.gebotech.financestracker.repository;
+package br.com.gebotech.financestracker.repository.interfaces;
 
 import br.com.gebotech.financestracker.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;

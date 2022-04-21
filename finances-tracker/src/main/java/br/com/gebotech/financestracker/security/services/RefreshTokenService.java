@@ -2,8 +2,8 @@ package br.com.gebotech.financestracker.security.services;
 
 import br.com.gebotech.financestracker.exception.TokenRefreshException;
 import br.com.gebotech.financestracker.models.RefreshToken;
-import br.com.gebotech.financestracker.repository.RefreshTokenRepository;
-import br.com.gebotech.financestracker.repository.UserRepository;
+import br.com.gebotech.financestracker.repository.interfaces.RefreshTokenRepository;
+import br.com.gebotech.financestracker.repository.interfaces.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

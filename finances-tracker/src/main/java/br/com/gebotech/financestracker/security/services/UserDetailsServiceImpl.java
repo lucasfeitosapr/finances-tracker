@@ -1,7 +1,7 @@
 package br.com.gebotech.financestracker.security.services;
 
 import br.com.gebotech.financestracker.models.User;
-import br.com.gebotech.financestracker.repository.UserRepository;
+import br.com.gebotech.financestracker.repository.interfaces.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

@@ -39,3 +39,9 @@ HELP.md
 mvnw
 
 mvnw.cmd
+
+finances-tracker/target/maven-status/maven-compiler-plugin/compile/default-compile/
+
+finances-tracker/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/
+
+finances-tracker/target/classes/
