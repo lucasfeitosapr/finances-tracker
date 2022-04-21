@@ -1,15 +1,20 @@
 package br.com.gebotech.financestracker.controller;
 
+import br.com.gebotech.financestracker.exception.TokenRefreshException;
+import br.com.gebotech.financestracker.models.RefreshToken;
 import br.com.gebotech.financestracker.models.Role;
 import br.com.gebotech.financestracker.models.User;
 import br.com.gebotech.financestracker.models.enums.ERole;
 import br.com.gebotech.financestracker.payload.request.LoginRequest;
 import br.com.gebotech.financestracker.payload.request.SignupRequest;
+import br.com.gebotech.financestracker.payload.request.TokenRefreshRequest;
 import br.com.gebotech.financestracker.payload.response.JwtResponse;
 import br.com.gebotech.financestracker.payload.response.MessageResponse;
+import br.com.gebotech.financestracker.payload.response.TokenRefreshResponse;
 import br.com.gebotech.financestracker.repository.RoleRepository;
 import br.com.gebotech.financestracker.repository.UserRepository;
 import br.com.gebotech.financestracker.security.jwt.JwtUtils;
+import br.com.gebotech.financestracker.security.services.RefreshTokenService;
 import br.com.gebotech.financestracker.security.services.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -41,6 +46,8 @@ public class AuthController {
     PasswordEncoder encoder;
     @Autowired
     JwtUtils jwtUtils;
+    @Autowired
+    RefreshTokenService refreshTokenService;
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -54,7 +61,11 @@ public class AuthController {
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
+
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
+
         return ResponseEntity.ok(new JwtResponse(jwt,
+                refreshToken.getToken(),
                 userDetails.getId(),
                 userDetails.getUsername(),
                 userDetails.getEmail(),
@@ -106,6 +117,19 @@ public class AuthController {
         user.setRoles(roles);
         userRepository.save(user);
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+    }
+
+    @PostMapping
+    public ResponseEntity<?> refreshToken(@Valid @RequestBody TokenRefreshRequest request) {
+        String requestRefreshToken = request.getRefreshToken();
+        return refreshTokenService.findByToken(requestRefreshToken)
+                .map(refreshTokenService::verifyExpiration)
+                .map(RefreshToken::getUser)
+                .map(user -> {
+                    String token = jwtUtils.generateTokenFromUsername(user.getUsername());
+                    return ResponseEntity.ok(new TokenRefreshResponse(token, requestRefreshToken));
+                })
+                .orElseThrow(() -> new TokenRefreshException(requestRefreshToken, "Refresh token is not in database!@"));
     }
 
 }
